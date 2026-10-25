@@ -1,5 +1,19 @@
 # Список дел
 import datetime
+import json
+
+FILE_NAME = 'tasks.json'
+
+def load_tasks():
+    try:
+        with open(FILE_NAME, encoding='utf-8') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
+
+def save_tasks(tasks):
+    with open(FILE_NAME, 'w', encoding='utf-8') as f:
+        json.dump(tasks, f, ensure_ascii=False, indent=2)
 
 def show_menu():
     print('1. Показать задачи')
@@ -38,7 +52,32 @@ def add_tasks(tasks):
         'created': datetime.date.today().isoformat()
     }
     tasks.append(new_task)
+    save_tasks(tasks)
     print(f'Задача #{new_id} добавлена')
+
+def mark_done(tasks):
+    if not tasks:
+        print('Список пуст')
+        return
+
+    show_tasks(tasks)
+    try:
+        target_id = int(input('Введите номер задачи для отметки: '))
+    except ValueError:
+        print('Ошибка: введите число')
+        return
+
+    for task in tasks:
+        if task['id'] == target_id:
+            if task['done']:
+                print('Задача выполнена')
+            else:
+                task['done'] = True
+                save_tasks(tasks)
+                print(f'Задача #{target_id} отмечена выполненной')
+            return
+
+    print(f'Задача #{target_id} не найдена')
 
 
 def main():
@@ -54,7 +93,7 @@ def main():
         elif choice == 2:
             add_tasks(tasks)
         elif choice == 3:
-            print('(здесь будет отметка)')
+            mark_done(tasks)
         elif choice == 4:
             print('(здесь будет удаление)')
         elif choice == 5:
