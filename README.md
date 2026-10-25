@@ -12,4 +12,4 @@
 ## Как запустить
 
 ```bash
-python todo.py
+python toDoList.py
