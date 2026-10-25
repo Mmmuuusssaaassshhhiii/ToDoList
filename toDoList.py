@@ -1,4 +1,6 @@
 # Список дел
+import datetime
+
 def show_menu():
     print('1. Показать задачи')
     print('2. Добавить задачу')
@@ -22,22 +24,35 @@ def show_tasks(tasks):
         status = '[x]' if task['done'] else '[ ]'
         print(f"{task['id']}. {status} {task['text']} (создано: {task['created']})")
 
+def add_tasks(tasks):
+    text = input('Введите задачу: ').strip()
+    if not text:
+        print('Текст задачи не может быть пустым.')
+        return
+
+    new_id = max((t['id'] for t in tasks), default = 0) + 1
+    new_task = {
+        'id': new_id,
+        'text': text,
+        'done': False,
+        'created': datetime.date.today().isoformat()
+    }
+    tasks.append(new_task)
+    print(f'Задача #{new_id} добавлена')
+
 
 def main():
     print('=== To-Do List ===')
+    tasks = []
+    
     while True:
         show_menu()
         choice = get_choice()
-        tasks = [
-        {"id": 1, "text": "Купить хлеб", "done": False, "created": "2026-10-25"},
-        {"id": 2, "text": "Помыть посуду", "done": True, "created": "2026-10-24"},
-        {"id": 3, "text": "Позвонить маме", "done": False, "created": "2026-10-23"},
-        ]
 
         if choice == 1:
             show_tasks(tasks)
         elif choice == 2:
-            print('(здесь будет добавление)')
+            add_tasks(tasks)
         elif choice == 3:
             print('(здесь будет отметка)')
         elif choice == 4:
