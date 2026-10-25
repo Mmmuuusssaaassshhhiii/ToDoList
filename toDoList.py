@@ -102,7 +102,7 @@ def delete_task(tasks):
     
 def main():
     print('=== To-Do List ===')
-    tasks = []
+    tasks = load_tasks()
     
     while True:
         show_menu()
