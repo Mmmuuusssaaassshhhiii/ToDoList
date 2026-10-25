@@ -79,7 +79,27 @@ def mark_done(tasks):
 
     print(f'Задача #{target_id} не найдена')
 
+def delete_task(tasks):
+    if not tasks:
+        print('Список пуст')
+        return
 
+    show_tasks(tasks)
+    try:
+        target_id = int(input('Введите номер задачи для удаления: '))
+    except ValueError:
+        print('Ошибка: введите число')
+        return
+
+    found = any(t['id'] == target_id for t in tasks)
+    if not found:
+        print(f'Задача #{target_id} не найдена')
+        return
+
+    tasks[:] = [t for t in tasks if t['id'] != target_id]
+    print(f'Задача #{target_id} удалена')
+    save_tasks(tasks)
+    
 def main():
     print('=== To-Do List ===')
     tasks = []
@@ -95,7 +115,7 @@ def main():
         elif choice == 3:
             mark_done(tasks)
         elif choice == 4:
-            print('(здесь будет удаление)')
+            delete_task(tasks)
         elif choice == 5:
             print('До встречи!')
             break
